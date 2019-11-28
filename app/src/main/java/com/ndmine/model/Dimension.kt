@@ -10,10 +10,17 @@ abstract class Dimension(private val dimensions: List<Int>, private val coords: 
     }
 
     /**
+     * Get the number of dimensions
+     */
+    fun getNumberOfDimensions(): Int {
+        return dimensions.size
+    }
+
+    /**
      * Get the coordinates as an array.
      */
-    fun getCoords(): List<Int> {
-        return coords
+    fun getCoords(): ArrayList<Int> {
+        return ArrayList(coords)
     }
 
     /**
@@ -29,6 +36,16 @@ abstract class Dimension(private val dimensions: List<Int>, private val coords: 
      * Get a child dimension at a particular index
      */
     abstract fun getDimension(index: Int): Dimension
+
+
+    /**
+     * Get the size of a dimension at a particular index
+     */
+    fun getDimensionSize(index: Int): Int {
+        require(index in dimensions.indices) { "Index was $index, when it should be between 0 and ${dimensions.size}." }
+
+        return dimensions[index]
+    }
 
     /**
      * Return a dimension for the given coordinates. Found recursively.

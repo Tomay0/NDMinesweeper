@@ -4,7 +4,7 @@ import java.util.*
 import java.util.Collections.shuffle
 import kotlin.collections.ArrayList
 
-class Board(private val dimensions: List<Int>) : Row(dimensions, ArrayList()) {
+class Board(dimensions: List<Int>) : Row(dimensions, ArrayList()) {
 
     private val allCells = ArrayList<Cell>()
 
@@ -27,13 +27,6 @@ class Board(private val dimensions: List<Int>) : Row(dimensions, ArrayList()) {
                 }
             }
         }
-    }
-
-    /**
-     * Get all the dimension sizes
-     */
-    fun getDimensionSizes(): List<Int> {
-        return dimensions
     }
 
     /**
@@ -64,7 +57,7 @@ class Board(private val dimensions: List<Int>) : Row(dimensions, ArrayList()) {
      * Get a cell at the given coordinates
      */
     fun getCell(coords: List<Int>): Cell {
-        require(coords.size == dimensions.size) { "Invalid number of dimensions to the coordinate. Should be ${dimensions.size}, but found ${coords.size}" }
+        require(coords.size == getNumberOfDimensions()) { "Invalid number of dimensions to the coordinate. Should be ${getNumberOfDimensions()}, but found ${coords.size}" }
 
         val dimension = getDimension(coords)
 
@@ -73,13 +66,50 @@ class Board(private val dimensions: List<Int>) : Row(dimensions, ArrayList()) {
         return dimension
     }
 
+
     /**
-     * Get all adjacent cells to a cell
+     * Get a set of all adjacent cells from this cell
      */
-    fun getAdjacentCells(cell: Cell): ArrayList<Cell> {
-        val coords = cell.getCoords()
+    fun getAdjacentCells(cell: Cell): Set<Cell> {
+        val adjacent: HashSet<Cell> = hashSetOf(cell)
+
+        for (depth in 0 until getNumberOfDimensions()) {
+            for (adj in HashSet(adjacent)) {
+                var coord = adj.getCoords()
+
+                coord[depth]++
+
+                if (isValidCoord(coord)) {
+                    adjacent.add(getCell(coord))
+                }
+
+                coord[depth] -= 2
+                if (isValidCoord(coord)) {
+                    adjacent.add(getCell(coord))
+                }
+            }
+
+        }
+
+        adjacent.remove(cell)
+
+        return adjacent
+    }
+
+    /**
+     * Check if the given coordinates are inbounds
+     */
+    private fun isValidCoord(coords: ArrayList<Int>): Boolean {
+        require(coords.size == getNumberOfDimensions()) { "Invalid number of dimensions to the coordinate. Should be ${getNumberOfDimensions()}, but found ${coords.size}" }
+
+        for (depth in 0 until getNumberOfDimensions()) {
+            if (coords[depth] < 0 || coords[depth] >= getDimensionSize(depth)) {
+                return false
+            }
+        }
 
 
+        return true
     }
 
 

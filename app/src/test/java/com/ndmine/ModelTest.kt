@@ -72,9 +72,8 @@ class ModelTest {
                 for (z in 0..4) {
                     val cell = board.getCell(listOf(x, y, z))
 
-                    if(cell.getHasMine()) {
+                    if (cell.getHasMine()) {
                         mines++
-                        println("Mine found at: $x,$y,$z")
                     }
                 }
             }
@@ -83,4 +82,37 @@ class ModelTest {
         assertEquals(30, mines)
     }
 
+    @Test
+    fun testGetAdjacent2D() {
+        val board = Board(listOf(10, 10))
+
+        // test the number of adjacent cells is correct
+        assertEquals(8, board.getAdjacentCells(board.getCell(listOf(2, 2))).size)
+        assertEquals(3, board.getAdjacentCells(board.getCell(listOf(0, 0))).size)
+        assertEquals(5, board.getAdjacentCells(board.getCell(listOf(0, 1))).size)
+        assertEquals(3, board.getAdjacentCells(board.getCell(listOf(9, 9))).size)
+
+        // test the locations
+        val adjacent = HashSet(board.getAdjacentCells(board.getCell(listOf(3, 3))))
+        adjacent.remove(board.getCell(listOf(2, 2)))
+        adjacent.remove(board.getCell(listOf(2, 3)))
+        adjacent.remove(board.getCell(listOf(2, 4)))
+        adjacent.remove(board.getCell(listOf(4, 2)))
+        adjacent.remove(board.getCell(listOf(4, 3)))
+        adjacent.remove(board.getCell(listOf(4, 4)))
+        adjacent.remove(board.getCell(listOf(3, 2)))
+        adjacent.remove(board.getCell(listOf(3, 4)))
+
+        assertEquals(0, adjacent.size)
+
+
+    }
+
+    @Test
+    fun testGetAdjacent4D() {
+        val board = Board(listOf(5, 5, 5, 5))
+
+
+        assertEquals(80, board.getAdjacentCells(board.getCell(listOf(3, 3, 3, 3))).size)
+    }
 }
