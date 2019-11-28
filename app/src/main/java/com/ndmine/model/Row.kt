@@ -7,10 +7,9 @@ open class Row(dimensions: List<Int>, coords: List<Int>) : Dimension(dimensions,
         require(dimensions.isNotEmpty()) { "Child dimensions must be listed. Consider using Cell instead." }
 
         // sublist of the list of dimension sizes
-        val childDimensions : List<Int> = if(dimensions.size == 1) {
+        val childDimensions: List<Int> = if (dimensions.size == 1) {
             ArrayList()
-        }
-        else {
+        } else {
             dimensions.takeLast(dimensions.size - 1)
         }
 
@@ -20,10 +19,9 @@ open class Row(dimensions: List<Int>, coords: List<Int>) : Dimension(dimensions,
             childCoords.addAll(coords)
             childCoords.add(i)
 
-            if(childDimensions.isNotEmpty()) {
+            if (childDimensions.isNotEmpty()) {
                 cols.add(Row(childDimensions, childCoords))
-            }
-            else {
+            } else {
                 cols.add(Cell(childCoords))
             }
         }
@@ -33,5 +31,12 @@ open class Row(dimensions: List<Int>, coords: List<Int>) : Dimension(dimensions,
         require(index in cols.indices) { "$index not a valid index within cols array." }
 
         return cols[index]
+    }
+
+    /**
+     * Return all child dimensions.
+     */
+    fun getDimensions(): ArrayList<Dimension> {
+        return ArrayList(cols)
     }
 }

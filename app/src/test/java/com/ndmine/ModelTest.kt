@@ -32,10 +32,8 @@ class ModelTest {
 
     @Test
     fun testCreate4DBoard() {
-        // create 3d 5x5x5 board
         val board = Board(listOf(3, 4, 6, 2))
 
-        // assert all coordinates are valid
         for (x in 0..2) {
             for (y in 0..3) {
                 for (z in 0..5) {
@@ -52,6 +50,37 @@ class ModelTest {
                 }
             }
         }
+    }
+
+    @Test
+    fun testGetTotalCells() {
+        val board = Board(listOf(3, 3, 3))
+
+        assertEquals(27, board.getTotalCells())
+    }
+
+    @Test
+    fun testCreateMines() {
+        val board = Board(listOf(5, 5, 5))
+
+        board.setRandomMines(30)
+
+        var mines = 0
+
+        for (x in 0..4) {
+            for (y in 0..4) {
+                for (z in 0..4) {
+                    val cell = board.getCell(listOf(x, y, z))
+
+                    if(cell.getHasMine()) {
+                        mines++
+                        println("Mine found at: $x,$y,$z")
+                    }
+                }
+            }
+        }
+
+        assertEquals(30, mines)
     }
 
 }
