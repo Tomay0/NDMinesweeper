@@ -1,5 +1,9 @@
 package com.ndmine.model
 
+/**
+ * This is a composite within the composite pattern. It contains a row of dimension objects at a lower level.
+ * For example, if 1 object is a 3D row, then it will contain an array of 2D rows, which contains an array of cells.
+ */
 open class Row(dimensions: List<Int>, coords: List<Int>) : Dimension(dimensions, coords) {
     private val cols: ArrayList<Dimension> = ArrayList()
 

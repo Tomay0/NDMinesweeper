@@ -1,5 +1,8 @@
 package com.ndmine.model
 
+/**
+ * A component for the composite pattern. A "dimension" may be 1D (a cell) or multiple dimensions (a row). Rows contain other dimensions of a lower dimension depth.
+ */
 abstract class Dimension(private val dimensions: List<Int>, private val coords: List<Int>) {
 
     /**

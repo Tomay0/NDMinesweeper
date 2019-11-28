@@ -72,7 +72,7 @@ class ModelTest {
                 for (z in 0..4) {
                     val cell = board.getCell(listOf(x, y, z))
 
-                    if (cell.getHasMine()) {
+                    if (cell.hasMine()) {
                         mines++
                     }
                 }
@@ -87,13 +87,13 @@ class ModelTest {
         val board = Board(listOf(10, 10))
 
         // test the number of adjacent cells is correct
-        assertEquals(8, board.getAdjacentCells(board.getCell(listOf(2, 2))).size)
-        assertEquals(3, board.getAdjacentCells(board.getCell(listOf(0, 0))).size)
-        assertEquals(5, board.getAdjacentCells(board.getCell(listOf(0, 1))).size)
-        assertEquals(3, board.getAdjacentCells(board.getCell(listOf(9, 9))).size)
+        assertEquals(8, board.getAdjacentCells(listOf(2, 2)).size)
+        assertEquals(3, board.getAdjacentCells(listOf(0, 0)).size)
+        assertEquals(5, board.getAdjacentCells(listOf(0, 1)).size)
+        assertEquals(3, board.getAdjacentCells(listOf(9, 9)).size)
 
         // test the locations
-        val adjacent = HashSet(board.getAdjacentCells(board.getCell(listOf(3, 3))))
+        val adjacent = HashSet(board.getAdjacentCells(listOf(3, 3)))
         adjacent.remove(board.getCell(listOf(2, 2)))
         adjacent.remove(board.getCell(listOf(2, 3)))
         adjacent.remove(board.getCell(listOf(2, 4)))
@@ -113,6 +113,20 @@ class ModelTest {
         val board = Board(listOf(5, 5, 5, 5))
 
 
-        assertEquals(80, board.getAdjacentCells(board.getCell(listOf(3, 3, 3, 3))).size)
+        assertEquals(80, board.getAdjacentCells(listOf(3, 3, 3, 3)).size)
+    }
+
+    @Test
+    fun testNumberOfMines() {
+        val board = Board(listOf(4, 4, 4))
+
+        board.getCell(listOf(0,0,0)).setHasMine(true)
+        board.getCell(listOf(0,1,0)).setHasMine(true)
+        board.getCell(listOf(3,0,3)).setHasMine(true)
+        board.getCell(listOf(0,2,2)).setHasMine(true)
+        board.getCell(listOf(1,1,1)).setHasMine(true)
+
+        assertEquals(3, board.countAdjacentMines(listOf(0,0,1)))
+        assertEquals(1, board.countAdjacentMines(listOf(0,0,2)))
     }
 }

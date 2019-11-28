@@ -4,6 +4,9 @@ import java.util.*
 import java.util.Collections.shuffle
 import kotlin.collections.ArrayList
 
+/**
+ * Represents the entire collection of cells, with a number of actions you can perform on it
+ */
 class Board(dimensions: List<Int>) : Row(dimensions, ArrayList()) {
 
     private val allCells = ArrayList<Cell>()
@@ -70,7 +73,8 @@ class Board(dimensions: List<Int>) : Row(dimensions, ArrayList()) {
     /**
      * Get a set of all adjacent cells from this cell
      */
-    fun getAdjacentCells(cell: Cell): Set<Cell> {
+    fun getAdjacentCells(coords: List<Int>): Set<Cell> {
+        val cell = getCell(coords)
         val adjacent: HashSet<Cell> = hashSetOf(cell)
 
         for (depth in 0 until getNumberOfDimensions()) {
@@ -99,7 +103,7 @@ class Board(dimensions: List<Int>) : Row(dimensions, ArrayList()) {
     /**
      * Check if the given coordinates are inbounds
      */
-    private fun isValidCoord(coords: ArrayList<Int>): Boolean {
+    private fun isValidCoord(coords: List<Int>): Boolean {
         require(coords.size == getNumberOfDimensions()) { "Invalid number of dimensions to the coordinate. Should be ${getNumberOfDimensions()}, but found ${coords.size}" }
 
         for (depth in 0 until getNumberOfDimensions()) {
@@ -110,6 +114,71 @@ class Board(dimensions: List<Int>) : Row(dimensions, ArrayList()) {
 
 
         return true
+    }
+
+    /**
+     * Return the number of mines adjacent to this cell
+     */
+    fun countAdjacentMines(coords: List<Int>): Int {
+        val adjacent = getAdjacentCells(coords)
+
+        var mines = 0
+
+        for (adj in adjacent) {
+            if (adj.hasMine()) {
+                mines++
+            }
+        }
+
+        return mines
+    }
+
+    /**
+     * Expose a cell
+     */
+    fun exposeCell(coords: List<Int>) {
+        val cell = getCell(coords)
+
+        // ignore if already exposed or marked
+        if (cell.isExposed() || cell.isMarked()) {
+            return
+        }
+
+        cell.setExposed(true)
+
+        // if there is a mine at this position, expose everything (You lost)
+        if (cell.hasMine()) {
+            for(otherCell in allCells) {
+                otherCell.setExposed(true)
+            }
+        }
+        // expose all adjacent cells if this cell has no neighbouring mines
+        else if(countAdjacentMines(coords) == 0) {
+            for(otherCell in getAdjacentCells(coords)) {
+                exposeCell(otherCell.getCoords())
+            }
+        }
+    }
+
+    /**
+     * Mark a cell
+     */
+    fun markCell(coords: List<Int>) {
+
+        val cell = getCell(coords)
+
+        cell.setMarked(true)
+
+    }
+
+    /**
+     * Un-mark a cell
+     */
+    fun unmarkCell(coords: List<Int>) {
+
+        val cell = getCell(coords)
+
+        cell.setMarked(false)
     }
 
 
